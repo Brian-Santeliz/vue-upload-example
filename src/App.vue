@@ -1,28 +1,46 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1>Agrega imagenes</h1>
+    <input type="file" name="" id="" @change="addChange" />
+    <button type="submit" @click="subir" :disabled="disabled">Subit</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import uploadImage from "../graphql/uploadImage.graphql";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  data() {
+    return {
+      file: null,
+      disabled: false,
+    };
+  },
+  methods: {
+    addChange({ target }) {
+      this.file = target.files[0];
+    },
+    subir() {
+      if (!this.file) return;
+      this.disabled = true;
+      this.$apollo
+        .mutate({
+          mutation: uploadImage,
+          variables: {
+            file: this.file,
+          },
+        })
+        .then(
+          ({
+            data: {
+              singleUpload: { filename },
+            },
+          }) => {
+            console.log(filename);
+          }
+        );
+      this.disabled = false;
+    },
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
