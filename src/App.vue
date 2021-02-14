@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Agrega imagenes</h1>
-    <!-- <input type="file" name="" id="" @change="addChange" /> -->
+    <!-- <input type="file" name="" accept="image/*" id="" @change="addChange" /> -->
     <input
       type="file"
       name=""
@@ -10,9 +10,9 @@
       @change="addMultiple"
       multiple
     />
-    <button type="submit" @click="subir" :disabled="disabled">
-      Submit Single
-    </button>
+    <!-- <button type="submit" @click="subir" :disabled="disabled"> -->
+    <!-- Submit Single -->
+    <!-- </button> -->
     <button type="submit" @click="subirArray" :disabled="disabled">
       Submit ARRAY
     </button>
@@ -52,13 +52,13 @@ export default {
         .then(
           ({
             data: {
-              singleUpload: { filename },
+              singleUpload: { filename, path },
             },
           }) => {
-            console.log(filename);
+            console.log(filename, path);
+            this.disabled = false;
           }
         );
-      this.disabled = false;
     },
     subirArray() {
       this.$apollo

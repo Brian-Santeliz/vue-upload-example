@@ -1,5 +1,6 @@
 mutation subir($file:Upload!){
   singleUpload(file:$file){
     filename
+    path
   }
 }
