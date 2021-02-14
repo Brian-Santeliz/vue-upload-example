@@ -1,0 +1,5 @@
+mutation arrayUpload($files:[Upload!]!){
+  arrayUpload(files:$files){
+    filename
+  }
+}
