@@ -61,6 +61,8 @@ export default {
         );
     },
     subirArray() {
+      this.disabled = true;
+
       this.$apollo
         .mutate({
           mutation: uploadArrayImages,
@@ -70,6 +72,7 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
+          this.disabled = false;
         });
     },
   },
