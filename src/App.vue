@@ -8,6 +8,7 @@
       id=""
       ref="inputFiles"
       @change="addMultiple"
+      accept="image/*"
       multiple
     />
     <button type="submit" @click="subir" :disabled="disabled">
@@ -25,8 +26,10 @@
 
 <script>
 import uploadImage from "../graphql/uploadImage.graphql";
-import uploadArrayImages from "../graphql/uploadArrayImages.graphql";
-import getArrayImage from "../graphql/getArrayImage.graphql";
+import arrayImagenCustom from "../graphql/arrayImagenCustom.gql";
+// import uploadArrayImages from "../graphql/uploadArrayImages.graphql";
+import getImages from "../graphql/getArrayImage.graphql";
+
 export default {
   name: "App",
   data() {
@@ -37,18 +40,20 @@ export default {
     };
   },
   apollo: {
-    allUpload: getArrayImage,
+    allUpload: getImages,
   },
   methods: {
     addChange({ target }) {
       this.file = target.files[0];
     },
-    addMultiple() {
-      this.files = this.$refs.inputFiles.files;
-      // e.target.files
+    addMultiple({ target }) {
+      // this.files = this.$refs.inputFiles.files;
+      this.files = target.files;
     },
     subir() {
-      if (!this.file) return;
+      if (!this.file) {
+        return;
+      }
       this.disabled = true;
       this.$apollo
         .mutate({
@@ -58,49 +63,42 @@ export default {
           },
           update: (store, { data: { singleUpload } }) => {
             const { allUpload } = store.readQuery({
-              query: getArrayImage,
+              query: getImages,
             });
             store.writeQuery({
-              query: getArrayImage,
+              query: getImages,
               data: {
                 allUpload: [...allUpload, singleUpload],
               },
             });
           },
         })
-        .then(
-          ({
-            data: {
-              singleUpload: { filename, path },
-            },
-          }) => {
-            console.log(filename, path);
-            this.disabled = false;
-          }
-        );
+        .then(({ data: { singleUpload } }) => {
+          this.disabled = false;
+          console.log(singleUpload);
+        })
+        .catch((e) => console.log(e));
     },
     subirArray() {
       this.disabled = true;
-
       this.$apollo
         .mutate({
-          mutation: uploadArrayImages,
+          mutation: arrayImagenCustom,
           variables: {
-            files: this.files,
+            files: { fotos: this.files },
           },
           update: (store, { data: { arrayUpload } }) => {
-            let { allUpload } = store.readQuery({
-              query: getArrayImage,
+            const data = store.readQuery({
+              query: getImages,
             });
-            allUpload = arrayUpload;
+            console.log("resultacdo de la query", data);
             store.writeQuery({
-              query: getArrayImage,
-              data: { allUpload },
+              query: getImages,
+              data: { allUpload: arrayUpload },
             });
           },
         })
-        .then((res) => {
-          console.log(res.data);
+        .then(() => {
           this.disabled = false;
         });
     },

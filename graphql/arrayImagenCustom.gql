@@ -1,0 +1,13 @@
+# mutation arrayUpload($files:FotoEntrada!){
+#   arrayUpload(files:$files){
+#     filename
+#     path
+#   }
+# }
+mutation arrayUpload($files:[FotoEntrada]!){
+  arrayUpload(files:$files){
+    filename
+    path
+    id
+  }
+}
