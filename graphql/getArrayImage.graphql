@@ -1,0 +1,6 @@
+{
+  allUpload{
+    filename
+    path
+  }
+}
