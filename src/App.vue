@@ -21,12 +21,17 @@
       <img :src="upload.path" alt="" />
       <p>{{ upload.filename }}</p>
     </div>
+    <h1>MUTACION DE EJEMPLO CON TRACKING UQER</h1>
+    <input type="file" name="" id="" @change="handleChangeTracking" />
+    <input type="file" name="" id="" multiple @change="handleChangeTracking" />
   </div>
 </template>
 
 <script>
 import uploadImage from "../graphql/uploadImage.graphql";
+import subidaFoto from "../graphql/subidaFoto.gql";
 import arrayImagenCustom from "../graphql/arrayImagenCustom.gql";
+import fotoEntranda from "../graphql/fotoEntranda.graphql";
 // import uploadArrayImages from "../graphql/uploadArrayImages.graphql";
 import getImages from "../graphql/getArrayImage.graphql";
 
@@ -37,6 +42,8 @@ export default {
       file: null,
       disabled: false,
       files: [],
+      fileTracking: null,
+      filesTrackingArray: [],
     };
   },
   apollo: {
@@ -78,6 +85,28 @@ export default {
           console.log(singleUpload);
         })
         .catch((e) => console.log(e));
+    },
+    handleChangeArrayTrackin({ target }) {
+      this.filesTrackingArray = target.files;
+      this.$apollo
+        .mutate({
+          mutation: fotoEntranda,
+          variables: {
+            fotos: this.filesTrackingArray,
+          },
+        })
+        .then((res) => console.log(res));
+    },
+    handleChangeTracking({ target }) {
+      this.fileTracking = target.files[0];
+      this.$apollo
+        .mutate({
+          mutation: subidaFoto,
+          variables: {
+            foto: this.fileTracking,
+          },
+        })
+        .then((r) => console.log(r));
     },
     subirArray() {
       this.disabled = true;

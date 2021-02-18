@@ -1,0 +1,14 @@
+
+# mutation exampleMutation($foto:Upload){
+#   exampleMutation(foto:$foto){
+#     filename
+#     path
+    
+#   }
+# }
+mutation subidaFoto($foto:Upload!){
+  subidaFoto(foto:$foto){
+  url
+  id
+  }
+}

@@ -1,0 +1,6 @@
+mutation exampleMutation($fotos:[FotoEntrada]){
+  exampleMutation(fotos:$fotos){
+    url
+    id
+  }
+}
