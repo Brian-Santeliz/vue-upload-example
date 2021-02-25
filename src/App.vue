@@ -23,15 +23,31 @@
     </div>
     <h1>MUTACION DE EJEMPLO CON TRACKING UQER</h1>
     <input type="file" name="" id="" @change="handleChangeTracking" />
-    <input type="file" name="" id="" multiple @change="handleChangeTracking" />
+    <input
+      type="file"
+      name=""
+      id=""
+      multiple
+      @change="handleChangeArrayTrackin"
+    />
+    <p>INPUT DEFINITIVO</p>
+    <input type="file" name="" id="" multiple @change="hanldeDefinitivo" />
+    <input type="file" name="" id="" multiple @change="ManejadorCambios" />
+    <br /><br /><br /><br />
+    <input type="file" name="" id="" multiple @change="handlePaqueteCrear" />
   </div>
 </template>
 
 <script>
 import uploadImage from "../graphql/uploadImage.graphql";
+// import arrefloFotosTracking from "../graphql/arrefloFotosTracking.graphql";
 import subidaFoto from "../graphql/subidaFoto.gql";
+import fotoEntradaConUploadArray from "../graphql/fotoEntradaConUploadArray.gql";
+import fotoEntradaArrayOriginal from "../graphql/fotoEntradaArrayOriginal.gql";
 import arrayImagenCustom from "../graphql/arrayImagenCustom.gql";
-import fotoEntranda from "../graphql/fotoEntranda.graphql";
+import paqueteCrear from "../graphql/paqueteCrear.gql";
+import fotoDefinitiva from "../graphql/fotoDefinitiva.gql";
+// import fotoEntranda from "../graphql/fotoEntranda.graphql";
 // import uploadArrayImages from "../graphql/uploadArrayImages.graphql";
 import getImages from "../graphql/getArrayImage.graphql";
 
@@ -86,13 +102,51 @@ export default {
         })
         .catch((e) => console.log(e));
     },
-    handleChangeArrayTrackin({ target }) {
+    ManejadorCambios({ target }) {
       this.filesTrackingArray = target.files;
+      const foto = {
+        foto: this.filesTrackingArray,
+      };
       this.$apollo
         .mutate({
-          mutation: fotoEntranda,
+          mutation: fotoEntradaArrayOriginal,
           variables: {
-            fotos: this.filesTrackingArray,
+            fotos: [foto],
+          },
+        })
+        .then((res) => console.log(res));
+    },
+    handleChangeArrayTrackin({ target }) {
+      this.filesTrackingArray = target.files;
+      const foto = {
+        foto: this.filesTrackingArray,
+      };
+      this.$apollo
+        .mutate({
+          mutation: fotoEntradaConUploadArray,
+          variables: {
+            FotoEntrada: {
+              fotos: [foto],
+            },
+          },
+        })
+        .then((res) => console.log(res));
+    },
+    hanldeDefinitivo({ target }) {
+      this.filesTrackingArray = target.files;
+      const foto = {
+        foto: this.filesTrackingArray,
+      };
+      console.log(foto);
+      this.$apollo
+        .mutate({
+          mutation: fotoDefinitiva,
+          variables: {
+            fotos: {
+              foto: [foto],
+              id: "2121",
+              url: "23232",
+            },
           },
         })
         .then((res) => console.log(res));
@@ -103,10 +157,51 @@ export default {
         .mutate({
           mutation: subidaFoto,
           variables: {
-            foto: this.fileTracking,
+            FotoEntrada: {
+              foto: this.fileTracking,
+            },
           },
         })
         .then((r) => console.log(r));
+    },
+    handlePaqueteCrear({ target }) {
+      //       if (o.files.length == 0 || !(/\.(jpg|png)$/i).test(foto.name)) {
+      //   alert('Ingrese una imagen con alguno de los siguientes formatos: .jpeg/.jpg/.png.');
+      //   return false;
+      // }
+      //              if (!this.filesTrackingArray.length && !(this.filesTrackingArray.type == 'image/png' || this.filesTrackingArray.type == 'image/jpg' ){
+      //         return;
+      // },
+      this.filesTrackingArray = target.files;
+      let condicion = false;
+      this.filesTrackingArray.forEach((file) => {
+        const result = /\.(jpg|png|gif)$/i.test(file.name);
+        if (result) {
+          return (condicion = true);
+        }
+        alert("El archivo no es una imagen");
+        return (condicion = false);
+      });
+      if (condicion) {
+        const foto = {
+          foto: this.filesTrackingArray,
+        };
+        this.$apollo
+          .mutate({
+            mutation: paqueteCrear,
+            variables: {
+              paquete: {},
+              fotos: {
+                foto: [foto],
+              },
+              personaId: "2232",
+            },
+          })
+          .then((res) => console.log(res))
+          .catch((e) => console.log(e));
+      } else {
+        alert("NO se puede enviar la imagen");
+      }
     },
     subirArray() {
       this.disabled = true;

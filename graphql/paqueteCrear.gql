@@ -1,0 +1,5 @@
+mutation paqueteCrear($paquete:PaqueteEntrada!, $fotos:[FotoEntrada], $personaId:ID){
+  paqueteCrear(paquete:$paquete, fotos:$fotos, personaId:$personaId){
+    id
+  }
+}

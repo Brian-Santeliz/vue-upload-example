@@ -1,0 +1,11 @@
+mutation subirArrayFoto($fotos:[FotoEntrada]!){
+  subidaInputEntada(fotos:$fotos)
+}
+
+
+
+#     type Query{
+#   paquetesFotos(paqueteId:ID):[Foto]!
+# }
+
+#    paqueteFotoCrear(paquetesId: ID!, fotos:[FotoEntrada]!): String! #Resultado!

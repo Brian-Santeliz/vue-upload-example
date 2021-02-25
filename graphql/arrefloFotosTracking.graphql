@@ -1,0 +1,7 @@
+mutation arrayFoto($fotos:[Upload]!){
+  subidaArrayFotos(fotos:$fotos){
+    id
+    url
+    
+  }
+}

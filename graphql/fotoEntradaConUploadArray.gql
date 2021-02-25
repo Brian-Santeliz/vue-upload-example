@@ -1,0 +1,5 @@
+mutation subidaInputEntada($FotoEntrada:[FotoEntrada]!){
+  subidaInputEntada(fotos:$FotoEntrada){
+    id
+  }
+  }

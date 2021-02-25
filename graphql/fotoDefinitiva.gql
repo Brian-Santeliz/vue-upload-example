@@ -1,0 +1,7 @@
+
+mutation paqueteFotoCrear($fotos:[FotoEntrada]!){
+  paqueteFotoCrear(fotos:$fotos){
+    url
+    id
+  }
+}
