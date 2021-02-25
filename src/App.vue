@@ -173,16 +173,22 @@ export default {
       //         return;
       // },
       this.filesTrackingArray = target.files;
-      let condicion = false;
+      let extension = false;
+      let peso = false;
       this.filesTrackingArray.forEach((file) => {
-        const result = /\.(jpg|png|gif)$/i.test(file.name);
-        if (result) {
-          return (condicion = true);
-        }
-        alert("El archivo no es una imagen");
-        return (condicion = false);
+        //Valida el formato de la imagen
+        const result = /\.(jpg|jpeg|png)$/i.test(file.name);
+        return result
+          ? (extension = true)
+          : ((extension = false), alert("El archivo no es una imagen"));
       });
-      if (condicion) {
+      this.filesTrackingArray.forEach((file) => {
+        //Validar lo que es el peso de la imagen
+        return file.size > 50000
+          ? ((peso = false), alert("La imagen debe pesar menos de 500kb"))
+          : (peso = true);
+      });
+      if (extension && peso) {
         const foto = {
           foto: this.filesTrackingArray,
         };
@@ -199,8 +205,6 @@ export default {
           })
           .then((res) => console.log(res))
           .catch((e) => console.log(e));
-      } else {
-        alert("NO se puede enviar la imagen");
       }
     },
     subirArray() {
