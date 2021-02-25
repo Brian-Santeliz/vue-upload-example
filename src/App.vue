@@ -35,6 +35,11 @@
     <input type="file" name="" id="" multiple @change="ManejadorCambios" />
     <br /><br /><br /><br />
     <input type="file" name="" id="" multiple @change="handlePaqueteCrear" />
+    <p v-if="errorSize">La imagen no debe pesar mas de 500kb</p>
+
+    <div v-if="errorExt">
+      <p>La extension no es valida</p>
+    </div>
   </div>
 </template>
 
@@ -60,6 +65,8 @@ export default {
       files: [],
       fileTracking: null,
       filesTrackingArray: [],
+      errorExt: false,
+      errorSize: false,
     };
   },
   apollo: {
@@ -178,15 +185,25 @@ export default {
       this.filesTrackingArray.forEach((file) => {
         //Valida el formato de la imagen
         const result = /\.(jpg|jpeg|png)$/i.test(file.name);
-        return result
-          ? (extension = true)
-          : ((extension = false), alert("El archivo no es una imagen"));
+        if (result) {
+          extension = true;
+          this.errorExt = false;
+        } else {
+          extension = false;
+          this.errorExt = true;
+          alert("El archivo no es una imagen");
+        }
       });
       this.filesTrackingArray.forEach((file) => {
-        //Validar lo que es el peso de la imagen
-        return file.size > 50000
-          ? ((peso = false), alert("La imagen debe pesar menos de 500kb"))
-          : (peso = true);
+        //Validar lo que es el peso de la
+        if (file.size > 50000) {
+          peso = false;
+          this.errorSize = true;
+          alert("La imagen debe pesar menos de 500kb");
+        } else {
+          peso = true;
+          this.errorSize = false;
+        }
       });
       if (extension && peso) {
         const foto = {
